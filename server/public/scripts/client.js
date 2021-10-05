@@ -6,6 +6,7 @@ $( document ).ready( function(){
   setupClickListeners()
   // load existing koalas on page load
   getKoalas();
+
 }); // end doc ready
 
 function setupClickListeners() {
@@ -22,8 +23,12 @@ function setupClickListeners() {
     // call saveKoala with the new obejct
     saveKoala( koalaToSend );
   }); 
-  $( '#viewKoalas').on('click', '.removeKoalaButton', removeKoala);
-  $( '#viewKoalas' ).on( 'click', '.readyForTransferButton', readyForTransfer );//Capture click event of 
+  $( '#viewKoalas' ).on( 'click', '.removeKoalaButton', removeKoala);
+  $( '#viewKoalas' ).on( 'click', '.readyForTransferButton', updateReadyForTransferToTrue );//Capture click event of 
+  $( '#viewKoalas' ).on( 'click', '.updateName', {param1: 'name'}, updateProperty ); //this param1 thing is a workaround - can't directly pass paramaters with jQuery's on('click')
+  $( '#viewKoalas' ).on( 'click', '.updateAge', {param1: 'age'}, updateProperty );
+  //todo - follow similar logic for other update buttons - update gender, etc. 
+
 }
 
 function getKoalas(){
@@ -39,16 +44,20 @@ function getKoalas(){
     let viewKoalas = $('#viewKoalas');
     viewKoalas.empty();
     for(let i=0; i<response.length; i++){
-      viewKoalas.append(
+      viewKoalas.append( 
+        //todo - name and age cells now have 'edit' buttons - other fields also need these buttons. 
+        //stretch todo - change buttons to pencil icons. 
+        //super stretch todo - make pencil icons only appear on hover 
         `<tr>
           <td data-id='${response[i].id}'>${response[i].id}</td>
-          <td>${response[i].name}</td>
-          <td>${response[i].age}</td>
+          <td>${response[i].name}<button class='updateName' data-id='${response[i].id}'>Edit</button></td>
+          <td>${response[i].age}<button class='updateAge' data-id='${response[i].id}'>Edit</button></td>
           <td>${response[i].gender}</td>
           <td>${response[i].ready_for_transfer}</td> 
           <td>${response[i].notes}</td>
           <td><button class='readyForTransferButton' data-id='${response[i].id}'>Ready for Transfer</button></td>
           <td><button class='removeKoalaButton' data-id='${response[i].id}'>Remove</button></td>
+          <td><button class='updateInfoButton' data-id='${response[i].id}'>Update</button></td>
         </tr>`
       );
     }
@@ -94,7 +103,7 @@ function saveKoala( newKoala ){
   })
 }
 //Update koala ready for transfer
-function readyForTransfer() {
+function updateReadyForTransferToTrue() {
   console.log( `in readyForTransfer` );
   $.ajax({
     method: 'PUT',
@@ -107,4 +116,42 @@ function readyForTransfer() {
     alert( `error with update `);
     console.log( err );
   })
+}
+
+
+async function updateProperty(propertyToUpdate) {
+  //modular function that allows you to update any property. it takes in 'name', 'age', etc. - names of column rows in our table. 
+ 
+  let prop = (propertyToUpdate.data.param1); //this is part of the workaround - allows us to pass a parameter in using the on('click') seen in lines ~28
+  console.log ('prop is', prop);
+
+  console.log( `in updateProperty` );
+
+  let newProp;
+
+  Swal.fire({
+    title: `New ${prop}:`,
+    input: 'text',
+    inputPlaceholder: `Enter New ${prop}`
+  }).then((result) =>{
+    newProp = result.value;
+
+    $.ajax({
+      method: 'PUT',
+      url: '/koalas?id=' + $( this ).data( 'id' ),//telling server which record to update
+      data: `${prop}='${newProp}'`
+    }).then( function( response ){
+      console.log( `back from update:`, response );
+      getKoalas();
+    }).catch( function( err ){
+      alert( `error with update `);
+      console.log( err );
+    })
+
+
+  }).catch( function(err) {
+    console.log('error with sweetAlert new Name:', err);
+  })
+
+ 
 }

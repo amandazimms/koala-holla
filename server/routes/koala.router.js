@@ -4,7 +4,6 @@ const koalaRouter = express.Router(); //NOTE!!! - we use koalaRouter.get and koa
 // DB CONNECTION
 const pool = require('../modules/pool'); //we added 
 
-
 // GET
 koalaRouter.get('/', (req, res) => { //only whack, not whack koalas
   const queryString = `SELECT * FROM koalas ORDER BY id`; 
@@ -38,12 +37,16 @@ koalaRouter.put( '/', ( req, res )=>{
     console.log( '/ update hit:', req.query );
     // res.send( 'back from update' ); (don't send status twice)
     //need to fix this so it reads the field to update from req.query instead of 
-    //hard-coding the field (i.e. ready_for_transfer)
-    //Also, should sanitize
-    console.log('PUT req.body:', req.body);
+    
+    //Also, should sanitize (this is the $1, $2 thing as seen in POST above)
 
-    //todo - somethign with req.body below after SET?
-    const queryString = `UPDATE koalas SET ready_for_transfer = true
+    let key = `${Object.keys(req.body)[0]}` //this gets, for example, 'ready_for_transfer' from client PUT's data
+    let value = `${req.body[Object.keys(req.body)[0]]}` //this gets, for example, 'true' from client PUT's data
+
+    console.log('key:', key, 'val:', value);
+
+    //todo - if you have multiple edits, loop through req.body to find each key and value to be edited
+    const queryString = `UPDATE koalas SET ${key}=${value}
                          WHERE id ='${req.query.id}';`;
     pool.query( queryString ).then( ( results )=>{
         res.sendStatus( 200 ); //Not sure if this the status for an update (maybe 204?)
@@ -61,7 +64,7 @@ koalaRouter.delete( '/', ( req, res )=>{
         res.sendStatus( 200 );
     }).catch( ( err )=>{
         console.log( err );
-        res.sendStats( 500 );
+        res.sendStatus( 500 );
     })
     
 })

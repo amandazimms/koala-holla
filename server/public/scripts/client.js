@@ -6,8 +6,6 @@ $( document ).ready( function(){
   setupClickListeners()
   // load existing koalas on page load
   getKoalas();
-  $( '#viewKoalas' ).on( 'click', '#readyForTransferButton', readyForTransfer );//Capture click event of 
-
 }); // end doc ready
 
 function setupClickListeners() {
@@ -27,6 +25,7 @@ function setupClickListeners() {
     saveKoala( koalaToSend );
   }); 
   $( '#viewKoalas').on('click', '.removeKoalaButton', removeKoala);
+  $( '#viewKoalas' ).on( 'click', '.readyForTransferButton', readyForTransfer );//Capture click event of 
 }
 
 function getKoalas(){
@@ -63,6 +62,7 @@ function getKoalas(){
 } // end getKoalas
 
 function removeKoala() {
+  console.log( 'in removeKoala:', $(this).data('id'));
   let koalaToRemove = $(this).data('id');
 
   $.ajax({
@@ -83,7 +83,7 @@ function saveKoala( newKoala ){
   // ajax call to server to get koalas
   $.ajax('/koalas',(req, res)=>{
     let queryText = 'INSERT INTO koalas (name, age, gender, ready_for_transfer, notes) VALUES ($1, $2, $3, $4, $5)';
-    let values = [req.body.name, req.body.age, req.body.gender,req.body.ready_for_transfer, req.body.notes];
+    let values = [req.body.name, req.body.age, req.body.gender, req.body.readyForTransfer, req.body.notes];
 
     pool.query(queryText, values).then((results)=>{
       res.sendStatus(201);
@@ -100,7 +100,8 @@ function readyForTransfer() {
   console.log( `in readyForTransfer` );
   $.ajax({
     method: 'PUT',
-    url: '/koalas?id=' + $( this ).data( 'id' )//telling server which record to update
+    url: '/koalas?id=' + $( this ).data( 'id' ),//telling server which record to update
+    data: 'ready_for_transfer=true'
   }).then( function( response ){
     console.log( `back from update:`, response );
   }).catch( function( err ){

@@ -68,6 +68,7 @@ function removeKoala() {
     url: '/koalas?id=' + koalaToRemove
   }).then ( function ( response ){
     console.log ( 'remove Koala:', response);
+    getKoalas();
     
   }).catch( function ( err ){
     console.log ( err );

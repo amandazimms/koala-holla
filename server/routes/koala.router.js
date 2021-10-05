@@ -59,7 +59,7 @@ koalaRouter.delete( '/', ( req, res )=>{
     const queryString = `DELETE FROM koalas WHERE id='${req.query.id}';`;
     pool.query( queryString ).then( ( results )=>{
         res.sendStatus( 200 );
-    }).catchj( ( err )=>{
+    }).catch( ( err )=>{
         console.log( err );
         res.sendStats( 500 );
     })

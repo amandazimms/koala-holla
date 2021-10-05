@@ -1,13 +1,13 @@
 const express = require('express');
-const app = express();
-const koalaRouter = express.Router();
+//const app = express(); //we added
+const koalaRouter = express.Router(); //todo we probably need to somehow use this variable 'koalaRouter'
 
 // DB CONNECTION
-const pool = require('../modules/pool');
+const pool = require('../modules/pool'); //we added 
 
 
 // GET
-app.get('/koalas', (req, res) => {
+koalaRouter.get('/', (req, res) => {  
   const queryString = `SELECT * FROM koalas`; 
 
   pool.query(queryString).then( (results) => { 
@@ -22,8 +22,8 @@ app.get('/koalas', (req, res) => {
 
 
 // POST
-app.post('/koalas', (req, res)=>{
-    console.log('/koalas post hit:', req.query)
+koalaRouter.post('/', (req, res)=>{
+    console.log('/ post hit:', req.query)
     const queryString = 'INSERT INTO koalas (name, age, gender, ready_for_transfer, notes) VALUES ($1, $2, $3, $4, $5)';
     let values = [req.body.name, req.body.age, req.body.gender, req.body.readyForTransfer, req.body.notes];
     
@@ -35,8 +35,8 @@ app.post('/koalas', (req, res)=>{
 })
 
 // PUT
-app.put( '/koalas', ( req, res )=>{
-    console.log( '/koalas update hit:', req.query );
+koalaRouter.put( '/', ( req, res )=>{
+    console.log( '/ update hit:', req.query );
     res.send( 'back from update' );
     //need to fix this so it reads the field to update from req.query instead of 
     //hard-coding the field (i.e. ready_for_transfer)
@@ -52,8 +52,8 @@ app.put( '/koalas', ( req, res )=>{
 })
 
 // DELETE
-app.delete( '/koalas', ( req, res )=>{
-    console.log( '/koalas delete hit: ', req.query );
+koalaRouter.delete( '/', ( req, res )=>{
+    console.log( '/ delete hit: ', req.query );
     const queryString = `DELETE FROM koalas WHERE id='${req.query.id}';`;
     pool.query( queryString ).then( ( results )=>{
         res.sendStatus( 200 );

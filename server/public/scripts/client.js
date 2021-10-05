@@ -58,6 +58,7 @@ function getKoalas(){
           <td><button class='readyForTransferButton' data-id='${response[i].id}'>Ready for Transfer</button></td>
           <td><button class='removeKoalaButton' data-id='${response[i].id}'>Remove</button></td>
           <td><button class='updateInfoButton' data-id='${response[i].id}'>Update</button></td>
+          //todo - updateInfoButton is no longer used - remove here and from index.html
         </tr>`
       );
     }

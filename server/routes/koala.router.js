@@ -7,7 +7,7 @@ const pool = require('../modules/pool'); //we added
 
 // GET
 koalaRouter.get('/', (req, res) => { //only whack, not whack koalas
-  const queryString = `SELECT * FROM koalas`; 
+  const queryString = `SELECT * FROM koalas ORDER BY id`; 
 
   pool.query(queryString).then( (results) => { 
     res.send(results.rows);
@@ -36,7 +36,7 @@ koalaRouter.post('/', (req, res)=>{
 // PUT
 koalaRouter.put( '/', ( req, res )=>{
     console.log( '/ update hit:', req.query );
-    // res.send( 'back from update' );
+    // res.send( 'back from update' ); (don't send status twice)
     //need to fix this so it reads the field to update from req.query instead of 
     //hard-coding the field (i.e. ready_for_transfer)
     //Also, should sanitize

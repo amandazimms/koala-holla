@@ -78,21 +78,42 @@ function removeKoala() {
   
 }// end removeKoala
 
+
+// function addPassenger () {
+//   // get user input & store in an object
+//   let objectToSend = {
+//       firstName:  $( '#firstNameIn' ).val(),
+//       lastName: $( '#lastNameIn' ).val() 
+//   }
+
+//   $.ajax({
+//       method: 'POST',
+//       url: '/passengers',
+//       data: objectToSend // must have data to send in a POST
+//   }).then( function( response ){
+//       // if successful, update DOM
+//       getPassengers();
+//       $( '#firstNameIn' ).val('');
+//       $( '#lastNameIn' ).val('');
+//   }).catch( function( err ){
+//       // catch any errors
+//       alert( 'error adding passenger' );
+//       console.log( err );
+//   })
+// }
 function saveKoala( newKoala ){
   console.log( 'in saveKoala', newKoala );
   // ajax call to server to get koalas
-  $.ajax('/koalas',(req, res)=>{
-    let queryText = 'INSERT INTO koalas (name, age, gender, ready_for_transfer, notes) VALUES ($1, $2, $3, $4, $5)';
-    let values = [req.body.name, req.body.age, req.body.gender, req.body.readyForTransfer, req.body.notes];
+  $.ajax({
+    method: 'POST',
+    url: '/koalas',
+    data: newKoala
+  }).then(function(response){
+    getKoalas();
 
-    pool.query(queryText, values).then((results)=>{
-      res.sendStatus(201);
-
-    }).catch((err)=>{
-      res.sendStatus(500);
+  }).catch(function ( err ){
       alert(`error adding koala`);
       console.log(err);
-    })
   })
 }
 //Update koala ready for transfer

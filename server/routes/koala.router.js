@@ -1,13 +1,12 @@
 const express = require('express');
-//const app = express(); //we added
-const koalaRouter = express.Router(); //todo we probably need to somehow use this variable 'koalaRouter'
+const koalaRouter = express.Router(); //NOTE!!! - we use koalaRouter.get and koalaRouter.otherthings in this file instead of app.get
 
 // DB CONNECTION
 const pool = require('../modules/pool'); //we added 
 
 
 // GET
-koalaRouter.get('/', (req, res) => {  
+koalaRouter.get('/', (req, res) => { //only whack, not whack koalas
   const queryString = `SELECT * FROM koalas`; 
 
   pool.query(queryString).then( (results) => { 

@@ -12,8 +12,6 @@ function setupClickListeners() {
   $( '#addButton' ).on( 'click', function(){
     console.log( 'in addButton on click' );
     // get user input and put in an object
-    // todo NOT WORKING YET :(
-    // using a test object
     let koalaToSend = {
       name:  $( '#nameIn' ).val(),
       age: $( '#ageIn' ).val(),
@@ -79,28 +77,6 @@ function removeKoala() {
 }// end removeKoala
 
 
-// function addPassenger () {
-//   // get user input & store in an object
-//   let objectToSend = {
-//       firstName:  $( '#firstNameIn' ).val(),
-//       lastName: $( '#lastNameIn' ).val() 
-//   }
-
-//   $.ajax({
-//       method: 'POST',
-//       url: '/passengers',
-//       data: objectToSend // must have data to send in a POST
-//   }).then( function( response ){
-//       // if successful, update DOM
-//       getPassengers();
-//       $( '#firstNameIn' ).val('');
-//       $( '#lastNameIn' ).val('');
-//   }).catch( function( err ){
-//       // catch any errors
-//       alert( 'error adding passenger' );
-//       console.log( err );
-//   })
-// }
 function saveKoala( newKoala ){
   console.log( 'in saveKoala', newKoala );
   // ajax call to server to get koalas
@@ -125,6 +101,7 @@ function readyForTransfer() {
     data: 'ready_for_transfer=true'
   }).then( function( response ){
     console.log( `back from update:`, response );
+    getKoalas();
   }).catch( function( err ){
     alert( `error with update `);
     console.log( err );

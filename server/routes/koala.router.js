@@ -36,11 +36,14 @@ koalaRouter.post('/', (req, res)=>{
 // PUT
 koalaRouter.put( '/', ( req, res )=>{
     console.log( '/ update hit:', req.query );
-    res.send( 'back from update' );
+    // res.send( 'back from update' );
     //need to fix this so it reads the field to update from req.query instead of 
     //hard-coding the field (i.e. ready_for_transfer)
     //Also, should sanitize
-    const queryString = `UPDATE koalas SET ready_for_transfer = true 
+    console.log('PUT req.body:', req.body);
+
+    //todo - somethign with req.body below after SET?
+    const queryString = `UPDATE koalas SET ready_for_transfer = true
                          WHERE id ='${req.query.id}';`;
     pool.query( queryString ).then( ( results )=>{
         res.sendStatus( 200 ); //Not sure if this the status for an update (maybe 204?)

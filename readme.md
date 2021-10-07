@@ -79,3 +79,11 @@ Your final product may look something like this:
   - app.put ( receives from updateKoala...() )- sql query to UPDATE - note - needs "id" to travel from DOM to client to server to database
 
  
+10/7 todo 
+sanitize (MM)
+
+create database.sql file
+
+stretch goal 5 "Client side filtering with a text box" - if you type an S, the S names pop up...
+stretch goal 2 "Confirmation dialog before deleting (research SweetAlert)."
+stretch goal 4. "Add form validation, additional styling and a README.md."

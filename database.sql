@@ -7,7 +7,7 @@ CREATE TABLE koalas (
     koala_name varchar(20) NOT NULL,
     age int NOT NULL,
     gender varchar(1) NOT NULL,
-    ready_for_transfer bool NOT NULL,
+    ready_for_transfer boolean NOT NULL,
     notes varchar(200)
 );
 

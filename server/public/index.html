@@ -6,7 +6,6 @@
     <script src="vendors/jquery-3.3.1.min.js" charset="utf-8"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
     <script src="scripts/client.js" charset="utf-8"></script>
     <link rel="stylesheet" href="styles/style.css">
   </head>
@@ -18,6 +17,14 @@
       <h3>Walla Walla, WA</h2>
     </header>
     <section id="addKoala">
+      <div class="showhim">
+        <table>
+        <tr>
+          <td class='cell'>${response[i].name}<button class='updateName editButton' data-id='${response[i].id}'><div class="showme"><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></div></button></td></div>
+        </tr>
+      </table>
+
+
       <h2>Add Koala</h2>
       <input type="text" id="nameIn" value="" placeholder="Name">
       <input type="text" id="ageIn" value="" placeholder="Age">
@@ -28,6 +35,8 @@
     </section>
     <section>
       <h2>All Koalas</h2>
+      <label for="filterByNameInput">Filter:</label>
+      <input id="filterByNameInput" placeholder="Enter koala name"><br>
       <table>
         <thead>
           <tr>
@@ -39,7 +48,6 @@
             <th>Notes</th>
             <th>Mark Ready</th>
             <th>Remove Koala</th> 
-            <th>Update Info</th> 
           </tr>
         </thead>
         <tbody id="viewKoalas">

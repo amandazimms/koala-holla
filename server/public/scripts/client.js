@@ -1,5 +1,8 @@
 console.log( 'js' );
 
+//GLOBALS
+let allKoalas = [];
+
 $( document ).ready( function(){
   console.log( 'JQ' );
   // Establish Click Listeners
@@ -27,6 +30,9 @@ function setupClickListeners() {
   $( '#viewKoalas' ).on( 'click', '.readyForTransferButton', updateReadyForTransferToTrue );//Capture click event of 
   $( '#viewKoalas' ).on( 'click', '.updateName', {param1: 'name'}, updateProperty ); //this param1 thing is a workaround - can't directly pass paramaters with jQuery's on('click')
   $( '#viewKoalas' ).on( 'click', '.updateAge', {param1: 'age'}, updateProperty );
+  $( '#viewKoalas' ).on( 'click', '.updateGender', {param1: 'gender'}, updateProperty );
+  $( '#viewKoalas' ).on( 'click', '.updateNotes', {param1: 'notes'}, updateProperty );
+  $( '#filterByNameInput').on( 'keypress', filterByName ); 
   //todo - follow similar logic for other update buttons - update gender, etc. 
 
 }
@@ -44,23 +50,40 @@ function getKoalas(){
     let viewKoalas = $('#viewKoalas');
     viewKoalas.empty();
     for(let i=0; i<response.length; i++){
-      viewKoalas.append( 
-        //todo - name and age cells now have 'edit' buttons - other fields also need these buttons. 
-        //stretch todo - change buttons to pencil icons. 
-        //super stretch todo - make pencil icons only appear on hover 
-        `<tr>
-          <td data-id='${response[i].id}'>${response[i].id}</td>
-          <td>${response[i].name}<button class='updateName' data-id='${response[i].id}'>Edit</button></td>
-          <td>${response[i].age}<button class='updateAge' data-id='${response[i].id}'>Edit</button></td>
-          <td>${response[i].gender}</td>
-          <td>${response[i].ready_for_transfer}</td> 
-          <td>${response[i].notes}</td>
-          <td><button class='readyForTransferButton' data-id='${response[i].id}'>Ready for Transfer</button></td>
-          <td><button class='removeKoalaButton' data-id='${response[i].id}'>Remove</button></td>
-          <td><button class='updateInfoButton' data-id='${response[i].id}'>Update</button></td>
-          //todo - updateInfoButton is no longer used - remove here and from index.html
-        </tr>`
-      );
+      let appendString = `<tr>
+           <td class='cell' data-id='${response[i].id}'>${response[i].id}</td>
+           <div class="showhim"><td class='cell'>${response[i].name}<button class='updateName editButton' data-id='${response[i].id}'><div class="showme"><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></div></button></td></div>
+           <td class='cell'>${response[i].age}<button class='updateAge editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
+           <td class='cell'>${response[i].gender}<button class='updateGender editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
+           <td class='cell'>${response[i].ready_for_transfer}</td> 
+           <td class='cell'>${response[i].notes}<button class='updateNotes editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>`;
+           if ( !response[i].ready_for_transfer ) {
+             appendString += `<td class='cell'><button class='readyForTransferButton' data-id='${response[i].id}'>Ready for Transfer</button></td>`;
+           } else {
+             appendString += `<td class='cell'></td>`
+           }      
+           appendString += `<td class='cell'><button class='removeKoalaButton' data-id='${response[i].id}'>Remove</button></td>
+           </tr>`;
+           viewKoalas.append( appendString );
+           
+           //STRETCH - for filtering purposes, add each result to global table allKoalas
+           allKoalas.push( response );
+
+      // viewKoalas.append( 
+      //   //todo - name and age cells now have 'edit' buttons - other fields also need these buttons. 
+      //   //stretch todo - change buttons to pencil icons. 
+      //   //super stretch todo - make pencil icons only appear on hover 
+      //   `<tr>
+      //     <td data-id='${response[i].id}'>${response[i].id}</td>
+      //     <td>${response[i].name}<button class='updateName' data-id='${response[i].id}'>Edit</button></td>
+      //     <td>${response[i].age}<button class='updateAge' data-id='${response[i].id}'>Edit</button></td>
+      //     <td>${response[i].gender}</td>
+      //     <td>${response[i].ready_for_transfer}</td> 
+      //     <td>${response[i].notes}</td>
+      //     <td><button class='readyForTransferButton' data-id='${response[i].id}'>Ready for Transfer</button></td>
+      //     <td><button class='removeKoalaButton' data-id='${response[i].id}'>Remove</button></td>
+      //   </tr>`
+      // );
     }
 
   }).catch( function (err) {
@@ -97,7 +120,11 @@ function saveKoala( newKoala ){
     data: newKoala
   }).then(function(response){
     getKoalas();
-
+      $('#nameIn').val('');
+      $('#ageIn').val('');
+      $('#genderIn').val('');
+      $('#readyForTransferIn').val('');
+      $('#notesIn').val('');
   }).catch(function ( err ){
       alert(`error adding koala`);
       console.log(err);
@@ -155,4 +182,14 @@ async function updateProperty(propertyToUpdate) {
   })
 
  
+}
+function filterByName( arrayOfKoalas ) {
+  //1 - use .includes on array to see if the koala name exists in our allKoalas array
+  //2 - if found, then add to temp array that we will pass to another function which will load the screen
+  let filteredKoalas = [];
+  for ( let i = 0; i < arrayOfKoalas.length; i++ ) {
+    // if ( arrayOfKoalas[i].name.includes( 'key pressed' ) {
+    //   filteredKoalas.push( arrayOfKoalas[i] );
+    // }
+  }
 }

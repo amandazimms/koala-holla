@@ -38,16 +38,23 @@ koalaRouter.put( '/', ( req, res )=>{
     // res.send( 'back from update' ); (don't send status twice)
     //need to fix this so it reads the field to update from req.query instead of 
     
-    //Also, should sanitize (this is the $1, $2 thing as seen in POST above)
+    //todo - should sanitize (this is the $1, $2 thing as seen in POST above)
+
+    //note that at this point, req.body = { gender: f }, for example
+    //note that req.query.id is the id of the koala
 
     let key = `${Object.keys(req.body)[0]}` //this gets, for example, 'ready_for_transfer' from client PUT's data
-    let value = `${req.body[Object.keys(req.body)[0]]}` //this gets, for example, 'true' from client PUT's data
+    let val = `${req.body[key]}` //this gets, for example, 'true' from client PUT's data
 
-    console.log('key:', key, 'val:', value);
+    console.log('key:', key, 'val:', val);
 
     //todo - if you have multiple edits, loop through req.body to find each key and value to be edited
-    const queryString = `UPDATE koalas SET ${key}=${value}
+    // const queryString = `UPDATE koalas SET '${key}' = VALUES ( $1 ) WHERE id ='${req.query.id}'`;
+    // let values = `[ '${ val }' ]`;
+    const queryString = `UPDATE koalas SET ${key}=${val}
                          WHERE id ='${req.query.id}';`;
+                         
+
     pool.query( queryString ).then( ( results )=>{
         res.sendStatus( 200 ); //Not sure if this the status for an update (maybe 204?)
     }).catch( ( err )=>{

@@ -22,7 +22,7 @@ koalaRouter.get('/', (req, res) => { //only whack, not whack koalas
 // POST
 koalaRouter.post('/', (req, res)=>{
     console.log('/ post hit:', req.query)
-    const queryString = 'INSERT INTO koalas (name, age, gender, ready_for_transfer, notes) VALUES ($1, $2, $3, $4, $5)';
+    const queryString = 'INSERT INTO koalas (koala_name, age, gender, ready_for_transfer, notes) VALUES ($1, $2, $3, $4, $5)';
     let values = [req.body.name, req.body.age, req.body.gender, req.body.readyForTransfer, req.body.notes];
     
     pool.query(queryString, values).then((results)=>{
@@ -49,8 +49,7 @@ koalaRouter.put( '/', ( req, res )=>{
     console.log('key:', key, 'val:', val);
 
     //todo - if you have multiple edits, loop through req.body to find each key and value to be edited
-    // const queryString = `UPDATE koalas SET '${key}' = VALUES ( $1 ) WHERE id ='${req.query.id}'`;
-    // let values = `[ '${ val }' ]`;
+    
     const queryString = `UPDATE koalas SET ${key}=${val}
                          WHERE id ='${req.query.id}';`;
                          

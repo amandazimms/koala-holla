@@ -55,7 +55,7 @@ function getKoalas(){
     for(let i=0; i<response.length; i++){
       let appendString = `<tr>
            <td class='cell' data-id='${response[i].id}'>${response[i].id}</td>
-           <td class='cell'>${response[i].name}<button class='updateName editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
+           <td class='cell'>${response[i].koala_name}<button class='updateName editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
            <td class='cell'>${response[i].age}<button class='updateAge editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
            <td class='cell'>${response[i].gender}<button class='updateGender editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
            <td class='cell'>${response[i].ready_for_transfer}</td> 
@@ -187,14 +187,18 @@ async function updateProperty(propertyToUpdate) {
 
  
 }
-function filterByName( arrayOfKoalas ) {
+function filterByName( koalasArray ) {
   //1 - use .includes on array to see if the koala name exists in our allKoalas array
   //2 - if found, then add to temp array that we will pass to another function which will load the screen
   let filteredKoalas = [];
-  for ( let i = 0; i < arrayOfKoalas.length; i++ ) {
-    if ( arrayOfKoalas[i].name.includes( 'key pressed' ) ) {
-      filteredKoalas.push( arrayOfKoalas[i] );
+  for ( let i = 0; i < koalasArray.length; i++ ) {
+    if ( koalasArray[i].name.includes( 'key pressed' ) ) {
+      filteredKoalas.push( koalasArray[i] );
     }
   }
+  fillTable(koalasArray );
+}
+//this could be reused in the GET portion
+function fillTable ( koalasArray ) {
   
 }

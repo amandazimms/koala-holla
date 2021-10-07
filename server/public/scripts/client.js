@@ -37,6 +37,9 @@ function setupClickListeners() {
 
 }
 
+//write some js that says on the hover of the 'child' class, set its display to block
+//set it to none 'on mouse exit / on mouse enter' 
+
 function getKoalas(){
   console.log( 'in getKoalas' );
   // ajax call to server to get koalas
@@ -52,7 +55,7 @@ function getKoalas(){
     for(let i=0; i<response.length; i++){
       let appendString = `<tr>
            <td class='cell' data-id='${response[i].id}'>${response[i].id}</td>
-           <div class="showhim"><td class='cell'>${response[i].name}<button class='updateName editButton' data-id='${response[i].id}'><div class="showme"><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></div></button></td></div>
+           <td class='cell'>${response[i].name}<button class='updateName editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
            <td class='cell'>${response[i].age}<button class='updateAge editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
            <td class='cell'>${response[i].gender}<button class='updateGender editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
            <td class='cell'>${response[i].ready_for_transfer}</td> 
@@ -178,6 +181,7 @@ async function updateProperty(propertyToUpdate) {
 
 
   }).catch( function(err) {
+    //note - you don't need a catch here with swal
     console.log('error with sweetAlert new Name:', err);
   })
 
@@ -188,8 +192,9 @@ function filterByName( arrayOfKoalas ) {
   //2 - if found, then add to temp array that we will pass to another function which will load the screen
   let filteredKoalas = [];
   for ( let i = 0; i < arrayOfKoalas.length; i++ ) {
-    // if ( arrayOfKoalas[i].name.includes( 'key pressed' ) {
-    //   filteredKoalas.push( arrayOfKoalas[i] );
-    // }
+    if ( arrayOfKoalas[i].name.includes( 'key pressed' ) ) {
+      filteredKoalas.push( arrayOfKoalas[i] );
+    }
   }
+  
 }

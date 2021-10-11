@@ -1,8 +1,5 @@
 console.log( 'js' );
 
-//GLOBALS
-let allKoalas = [];
-
 $( document ).ready( function(){
   console.log( 'JQ' );
   // Establish Click Listeners
@@ -32,9 +29,8 @@ function setupClickListeners() {
   $( '#viewKoalas' ).on( 'click', '.updateAge', {param1: 'age'}, updateProperty );
   $( '#viewKoalas' ).on( 'click', '.updateGender', {param1: 'gender'}, updateProperty );
   $( '#viewKoalas' ).on( 'click', '.updateNotes', {param1: 'notes'}, updateProperty );
-  $( '#filterByNameInput').on( 'keypress', filterByName ); 
-  //todo - follow similar logic for other update buttons - update gender, etc. 
-
+    //todo - follow similar logic for other update buttons - update gender, etc.
+    $( '#filterByNameInput').on( 'keyup', filterByName );
 }
 
 //write some js that says on the hover of the 'child' class, set its display to block
@@ -55,7 +51,7 @@ function getKoalas(){
     for(let i=0; i<response.length; i++){
       let appendString = `<tr>
            <td class='cell' data-id='${response[i].id}'>${response[i].id}</td>
-           <td class='cell'>${response[i].koala_name}<button class='updateName editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
+           <td class='cell' id="koalaName">${response[i].koala_name}<button class='updateName editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
            <td class='cell'>${response[i].age}<button class='updateAge editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
            <td class='cell'>${response[i].gender}<button class='updateGender editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
            <td class='cell'>${response[i].ready_for_transfer}</td> 
@@ -68,9 +64,6 @@ function getKoalas(){
            appendString += `<td class='cell'><button class='removeKoalaButton' data-id='${response[i].id}'>Remove</button></td>
            </tr>`;
            viewKoalas.append( appendString );
-           
-           //STRETCH - for filtering purposes, add each result to global table allKoalas
-           allKoalas.push( response );
 
       // viewKoalas.append( 
       //   //todo - name and age cells now have 'edit' buttons - other fields also need these buttons. 
@@ -187,18 +180,23 @@ async function updateProperty(propertyToUpdate) {
 
  
 }
-function filterByName( koalasArray ) {
-  //1 - use .includes on array to see if the koala name exists in our allKoalas array
-  //2 - if found, then add to temp array that we will pass to another function which will load the screen
-  let filteredKoalas = [];
-  for ( let i = 0; i < koalasArray.length; i++ ) {
-    if ( koalasArray[i].name.includes( 'key pressed' ) ) {
-      filteredKoalas.push( koalasArray[i] );
-    }
-  }
-  fillTable(koalasArray );
-}
-//this could be reused in the GET portion
-function fillTable ( koalasArray ) {
+function filterByName( ) {
+  //When user types a letter in the 'filter by' input element, the keyup event is triggered.
+  //The following will hide anything that doesn't have the letters typed in the input box.
   
+  //e want to hide the whole row if nothing is found, so point to it
+  let rows = $('#koalaTable tbody tr'); 
+  //this points to the text in the 'filter' input box
+  let val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase().split(' '); 
+
+  rows.hide().filter(function() {
+    let koalaNameText = $( this ).children( '#koalaName' )[0].textContent;
+    //Get the text in the 'koala name' cell since we are filtering by koala name.
+    let text = koalaNameText.replace(/\s+/g, ' ').toLowerCase(); 
+    let matchesSearch = true;
+    $(val).each(function(index, value) {
+      matchesSearch = (!matchesSearch) ? false : ~text.indexOf(value);
+    });
+    return matchesSearch;
+  }).show();
 }

@@ -52,7 +52,8 @@ koalaRouter.put( '/', ( req, res )=>{
     
     const queryString = `UPDATE koalas SET ${key}=${val}
                          WHERE id ='${req.query.id}';`;
-                         
+    
+    console.log('query string:', queryString);
 
     pool.query( queryString ).then( ( results )=>{
         res.sendStatus( 200 ); //Not sure if this the status for an update (maybe 204?)

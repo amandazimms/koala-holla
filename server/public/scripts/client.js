@@ -28,7 +28,7 @@ function setupClickListeners() {
   }); 
   $( '#viewKoalas' ).on( 'click', '.removeKoalaButton', removeKoala);
   $( '#viewKoalas' ).on( 'click', '.readyForTransferButton', updateReadyForTransferToTrue );//Capture click event of 
-  $( '#viewKoalas' ).on( 'click', '.updateName', {param1: 'name'}, updateProperty ); //this param1 thing is a workaround - can't directly pass paramaters with jQuery's on('click')
+  $( '#viewKoalas' ).on( 'click', '.updateName', {param1: 'koala_name'}, updateProperty ); //this param1 thing is a workaround - can't directly pass paramaters with jQuery's on('click')
   $( '#viewKoalas' ).on( 'click', '.updateAge', {param1: 'age'}, updateProperty );
   $( '#viewKoalas' ).on( 'click', '.updateGender', {param1: 'gender'}, updateProperty );
   $( '#viewKoalas' ).on( 'click', '.updateNotes', {param1: 'notes'}, updateProperty );
@@ -136,6 +136,7 @@ function saveKoala( newKoala ){
 //Update koala ready for transfer
 function updateReadyForTransferToTrue() {
   console.log( `in readyForTransfer` );
+  
   $.ajax({
     method: 'PUT',
     url: '/koalas?id=' + $( this ).data( 'id' ),//telling server which record to update
@@ -154,8 +155,6 @@ async function updateProperty(propertyToUpdate) {
   //modular function that allows you to update any property. it takes in 'name', 'age', etc. - names of column rows in our table. 
  
   let prop = (propertyToUpdate.data.param1); //this is part of the workaround - allows us to pass a parameter in using the on('click') seen in lines ~28
-  console.log ('prop is', prop);
-
   console.log( `in updateProperty` );
 
   let newProp;

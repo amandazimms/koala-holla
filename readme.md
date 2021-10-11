@@ -53,37 +53,3 @@ Your final product may look something like this:
 
 ![sample](sample.png)
 
-
-
-## Notes / plan / how-to
-
-- Make a database
-  - columns: id, name-varchar20/text, age-int, gender-char1, transfer-bool, notes-varchar/text
-
-- Add columns on DOM 
-  - Mark Ready (contains "ready for transfer" button for only entries whose "readyForTransfer = false")
-    - when clicked, it changes the readyForTransfer value to true, and button disappears
-  - Remove (contains "delte" buttons for all)
-    - removes the whole entry from the database (and the DOM should repopulate with only current entries)
-
-- CLIENT:
-  - getKoalas() - uses ajax GET
-  - saveKoala() - uses ajax POST
-  - removeKoala() - uses ajax DELETE
-  - updateKoalaReadyForTransfer() - uses ajax PUT
-
-- SERVERSIDE (in KOALA.ROUTER):
-  - app.get ( receives from getKoala() )- uses SQL to pull info from database
-  - app.post ( receives from saveKoala() )- req.body - sql INSERT new row
-  - app.delete ( receives from removeKoala() )- sql query to DELETE - note - needs "id" to travel from DOM to client to server to database
-  - app.put ( receives from updateKoala...() )- sql query to UPDATE - note - needs "id" to travel from DOM to client to server to database
-
- 
-10/7 todo 
-sanitize (MM)
-
-create database.sql file
-
-stretch goal 5 "Client side filtering with a text box" - if you type an S, the S names pop up...
-stretch goal 2 "Confirmation dialog before deleting (research SweetAlert)."
-stretch goal 4. "Add form validation, additional styling and a README.md."

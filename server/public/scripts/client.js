@@ -29,12 +29,8 @@ function setupClickListeners() {
   $( '#viewKoalas' ).on( 'click', '.updateAge', {param1: 'age'}, updateProperty );
   $( '#viewKoalas' ).on( 'click', '.updateGender', {param1: 'gender'}, updateProperty );
   $( '#viewKoalas' ).on( 'click', '.updateNotes', {param1: 'notes'}, updateProperty );
-    //todo - follow similar logic for other update buttons - update gender, etc.
     $( '#filterByNameInput').on( 'keyup', filterByName );
 }
-
-//write some js that says on the hover of the 'child' class, set its display to block
-//set it to none 'on mouse exit / on mouse enter' 
 
 function getKoalas(){
   console.log( 'in getKoalas' );
@@ -48,7 +44,7 @@ function getKoalas(){
     console.log('response:', response);
     let viewKoalas = $('#viewKoalas');
     viewKoalas.empty();
-    for(let i=0; i<response.length; i++){
+    for(let i=0; i<response.length; i++){ //for all the koalas we got from server, display them on the dom
       let appendString = `<tr>
            <td class='cell' data-id='${response[i].id}'>${response[i].id}</td>
            <td class='cell' id="koalaName">${response[i].koala_name}<button class='updateName editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
@@ -56,30 +52,18 @@ function getKoalas(){
            <td class='cell'>${response[i].gender}<button class='updateGender editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>
            <td class='cell'>${response[i].ready_for_transfer}</td> 
            <td class='cell'>${response[i].notes}<button class='updateNotes editButton' data-id='${response[i].id}'><img class="editButtonImage" src="./images/editIcon.png" alt="Edit"></button></td>`;
+           //if the koala is NOT ready for transfer (value is false), add a 'ready for trasnfer' button so that can be marked
            if ( !response[i].ready_for_transfer ) {
              appendString += `<td class='cell'><button class='readyForTransferButton' data-id='${response[i].id}'>Ready for Transfer</button></td>`;
-           } else {
+           } 
+           //otherwise, no button is needed, so just add an empty cell
+           else {
              appendString += `<td class='cell'></td>`
            }      
            appendString += `<td class='cell'><button class='removeKoalaButton' data-id='${response[i].id}'>Remove</button></td>
            </tr>`;
+           //finally, append this string of HTML to the DOM
            viewKoalas.append( appendString );
-
-      // viewKoalas.append( 
-      //   //todo - name and age cells now have 'edit' buttons - other fields also need these buttons. 
-      //   //stretch todo - change buttons to pencil icons. 
-      //   //super stretch todo - make pencil icons only appear on hover 
-      //   `<tr>
-      //     <td data-id='${response[i].id}'>${response[i].id}</td>
-      //     <td>${response[i].name}<button class='updateName' data-id='${response[i].id}'>Edit</button></td>
-      //     <td>${response[i].age}<button class='updateAge' data-id='${response[i].id}'>Edit</button></td>
-      //     <td>${response[i].gender}</td>
-      //     <td>${response[i].ready_for_transfer}</td> 
-      //     <td>${response[i].notes}</td>
-      //     <td><button class='readyForTransferButton' data-id='${response[i].id}'>Ready for Transfer</button></td>
-      //     <td><button class='removeKoalaButton' data-id='${response[i].id}'>Remove</button></td>
-      //   </tr>`
-      // );
     }
 
   }).catch( function (err) {
@@ -89,6 +73,8 @@ function getKoalas(){
 } // end getKoalas
 
 function removeKoala() {
+  //makes an ajax call to remove a koala from our DB, then updates the DOM with new list of koalas
+
   console.log( 'in removeKoala:', $(this).data('id'));
   let koalaToRemove = $(this).data('id');
 
@@ -109,13 +95,15 @@ function removeKoala() {
 
 function saveKoala( newKoala ){
   console.log( 'in saveKoala', newKoala );
-  // ajax call to server to get koalas
+  // ajax call to server to add a new koala to the DB, with the info from our input fields
   $.ajax({
     method: 'POST',
     url: '/koalas',
     data: newKoala
   }).then(function(response){
-    getKoalas();
+      getKoalas();
+
+      //clear out all the input fields
       $('#nameIn').val('');
       $('#ageIn').val('');
       $('#genderIn').val('');
@@ -126,8 +114,10 @@ function saveKoala( newKoala ){
       console.log(err);
   })
 }
-//Update koala ready for transfer
+
 function updateReadyForTransferToTrue() {
+  //function that marks a koala as 'ready for transfer' via ajax put call. changes the ready_for_transfer value to true (hardcoded)
+
   console.log( `in readyForTransfer` );
   
   $.ajax({
@@ -145,20 +135,23 @@ function updateReadyForTransferToTrue() {
 
 
 async function updateProperty(propertyToUpdate) {
-  //modular function that allows you to update any property. it takes in 'name', 'age', etc. - names of column rows in our table. 
+  //modular function that allows you to update the value of any property. it takes in 'name', 'age', etc. - names of column rows in our table. 
  
   let prop = (propertyToUpdate.data.param1); //this is part of the workaround - allows us to pass a parameter in using the on('click') seen in lines ~28
   console.log( `in updateProperty` );
 
   let newProp;
 
-  Swal.fire({
+  Swal.fire({ //sweet alert which prompts the user for the new, updated property value
     title: `New ${prop}:`,
     input: 'text',
     inputPlaceholder: `Enter New ${prop}`
-  }).then((result) =>{
+
+  }).then((result) =>{ //after the swal closes, move on and do the next thing...
     newProp = result.value;
 
+    //nested try then catch! Pretty cool
+    //AJAX put request to update the data in our db
     $.ajax({
       method: 'PUT',
       url: '/koalas?id=' + $( this ).data( 'id' ),//telling server which record to update
@@ -172,7 +165,7 @@ async function updateProperty(propertyToUpdate) {
     })
 
 
-  }).catch( function(err) {
+  }).catch( function(err) { //this is the .catch of the SWAL
     //note - you don't need a catch here with swal
     console.log('error with sweetAlert new Name:', err);
   })
@@ -183,7 +176,7 @@ function filterByName( ) {
   //When user types a letter in the 'filter by' input element, the keyup event is triggered.
   //The following will hide anything that doesn't have the letters typed in the input box.
   
-  //e want to hide the whole row if nothing is found, so point to it
+  //we want to hide the whole row if nothing is found, so point to it
   let rows = $('#koalaTable tbody tr'); 
   //this points to the text in the 'filter' input box
   let val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase().split(' '); 

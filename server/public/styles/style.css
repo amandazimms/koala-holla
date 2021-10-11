@@ -1,4 +1,5 @@
-.editButton {
+.editButton { 
+  /* this is for the actual button of the edit buttons, which we want mostly invisible */
   background: none;
 	color: inherit;
 	border: none;
@@ -8,18 +9,10 @@
 	outline: inherit;
 }
 
-
 .editButtonImage {
+  /* this is for the IMAGE within the edit buttons */
   width: 12px;
   height: 12px;
-}
-
-.showme {
-  display: none;
-}
-
-.showhim:hover .showme {
-  display: block;
 }
 
 table {
@@ -40,8 +33,9 @@ tr {
 td {
   border: 1px solid black;
   padding: 5px;
-background-color: lightblue;
+  background-color: lightblue;
 }
+
 #filterByNameInput {
   margin-bottom: 10px;
 }
